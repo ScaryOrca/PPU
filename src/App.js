@@ -1,28 +1,59 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import ProductFields from './ProductFields';
+import AddProduct from './AddProduct';
 import './App.css';
 
 class App extends Component {
+
+  constructor() {
+    super();
+
+    this.state = {
+      products: [],
+      bestPrice: Infinity
+    };
+
+    this.handleAddProduct = this.handleAddProduct.bind(this);
+    this.handleGetPPU = this.handleGetPPU.bind(this);
+  }
+
+  handleAddProduct(value) {
+    let currentState = {};
+    currentState = this.state;
+    currentState.products.push(value);
+
+    this.setState(currentState);
+  }
+
+  handleGetPPU(value) {
+    let currentbestPrice = this.state.bestPrice;
+    let currentState = this.state;
+
+    if (value < currentbestPrice) {
+      currentState.bestPrice = value;
+      this.setState(currentState);
+    }
+  }
+
   render() {
+    const products = this.state.products.map((product) =>
+      <div className='product-group' key={product}>
+        <ProductFields getPPU={this.handleGetPPU} />
+      </div>
+    );
+
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {products}
+        <span className='product-group'>
+          <span className='input-icon'>
+            <i className='fas fa-plus'></i>
+              </span>
+          <AddProduct addProduct={this.handleAddProduct} />
+        </span>
       </div>
     );
   }
 }
 
-export default App;
+export default App
